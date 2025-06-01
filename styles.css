@@ -1,0 +1,1391 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+header .logo-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin: 20px 0;
+}
+
+.calendar-container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.calendar-header button {
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    color: #3498db;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.calendar-header button:hover {
+    background: rgba(52, 152, 219, 0.1);
+    transform: scale(1.05);
+}
+
+.calendar-header h2 {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    margin: 0 15px;
+    flex: 1;
+    text-align: center;
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    padding: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.calendar-day.has-event {
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.calendar-day.has-event::after {
+    content: '⛱️';
+    font-size: 0.9em;
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.calendar-day:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.calendar-day.today {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    font-weight: 600;
+}
+
+.calendar-day.selected {
+    background-color: #fff3e0;
+    border-color: #ff9800;
+    font-weight: 600;
+}
+
+.calendar-day.empty {
+    border: none;
+    cursor: default;
+}
+
+.calendar-day.empty:hover {
+    background-color: transparent;
+    transform: none;
+}
+
+.calendar-day.holiday {
+    color: #e74c3c;
+}
+
+/* 일정이 있는 휴일의 경우에도 글자색 유지 */
+.calendar-day.holiday.has-event {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* 일정 관리 컨테이너 */
+.schedule-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 768px) {
+    .schedule-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.schedule-list {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+}
+
+.schedule-list h3 {
+    text-align: left !important;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.schedule-date {
+    text-align: left !important;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+}
+
+.schedule-date span {
+    text-align: left !important;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.schedule-items {
+    position: relative;
+    padding-left: 20px;
+}
+
+.schedule-timeline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+.schedule-item {
+    position: relative;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: left !important;
+    height: auto;
+    min-height: fit-content;
+    border: 1px solid #f0f0f0;
+}
+
+.schedule-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    border-color: #e0e0e0;
+}
+
+.schedule-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: #3498db;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #3498db;
+}
+
+.schedule-item:hover::before {
+    background: #2980b9;
+    transform: translateY(-50%) scale(1.2);
+    box-shadow: 0 0 0 3px #2980b9;
+}
+
+.schedule-item h4 {
+    flex: 1;
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left !important;
+}
+
+.schedule-item h4 a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.schedule-item h4 a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.schedule-item .event-time {
+    text-align: left !important;
+    color: #3498db;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.schedule-item .event-time::before {
+    content: '🕒';
+    margin-right: 6px;
+    font-size: 1.1em;
+}
+
+.schedule-item .event-details {
+    text-align: left !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    height: auto;
+    overflow: visible;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.schedule-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    height: 0;
+    overflow: hidden;
+}
+
+.schedule-item.show-actions .schedule-actions {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+    padding-top: 12px;
+}
+
+.schedule-actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 0 0 auto;
+    min-width: 80px;
+}
+
+.schedule-actions .edit-btn {
+    background: #f8f9fa;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.schedule-actions .edit-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.schedule-actions .delete-btn {
+    background: #f8f9fa;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.schedule-actions .delete-btn:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+/* 빈 일정 상태 */
+.no-events {
+    text-align: center;
+    padding: 20px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.schedule-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    flex: 1;
+}
+
+.add-schedule-btn {
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.add-schedule-btn::before {
+    content: '+';
+    font-size: 28px;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.add-schedule-btn:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+.schedule-form-container {
+    position: relative;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+}
+
+.schedule-form-container:not(.hidden) {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 20px;
+}
+
+.form-content {
+    position: relative;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.schedule-form-container h3 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 1.4rem;
+}
+
+.schedule-form {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.travel-type {
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+}
+
+/* 버튼 컨테이너 여백 조정 */
+.form-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 15px;
+}
+
+/* 제목 영역 특별 스타일 */
+.form-group:first-of-type {
+    margin-bottom: 25px;
+}
+
+.form-group:first-of-type input[type="text"] {
+    font-size: 16px;
+    padding: 14px;
+    margin-bottom: 15px;
+}
+
+/* 날짜 입력 영역 */
+.form-group:nth-of-type(2) {
+    margin-bottom: 25px;
+}
+
+.form-buttons {
+    margin-top: 40px;
+    display: flex;
+    gap: 15px;
+}
+
+.submit-btn, .cancel-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+}
+
+.submit-btn:hover {
+    background: #27ae60;
+}
+
+.cancel-btn {
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.cancel-btn:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    header .logo-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .calendar-container {
+        padding: 10px;
+    }
+
+    .calendar-header button {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .calendar-header h2 {
+        font-size: 1.2rem;
+        margin: 0 10px;
+    }
+
+    .calendar-day {
+        font-size: 0.9rem;
+    }
+
+    .schedule-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .add-schedule-btn {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+    }
+
+    .add-schedule-btn::before {
+        font-size: 24px;
+    }
+
+    .schedule-form-container {
+        margin-top: 15px;
+    }
+
+    .form-content {
+        padding: 20px;
+    }
+
+    .schedule-form {
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-buttons {
+        margin-top: 30px;
+    }
+
+    .submit-btn, .cancel-btn {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    input, textarea, button {
+        font-size: 0.9rem;
+    }
+
+    .schedule-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .event-details {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .schedule-actions button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .schedule-item h4 {
+        font-size: 1rem;
+    }
+    
+    .schedule-item h4 a::after {
+        font-size: 0.7em;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group.half {
+        width: 100%;
+    }
+
+    .map-input-container {
+        flex-direction: column;
+    }
+
+    .map-search-btn {
+        width: 100%;
+    }
+
+    .calendar-day.has-event {
+        font-size: 1rem;
+    }
+
+    .calendar-day.has-event::after {
+        font-size: 0.8em;
+        bottom: 1px;
+    }
+}
+
+/* 작은 모바일 화면 최적화 */
+@media (max-width: 480px) {
+    .weekdays div {
+        font-size: 0.8rem;
+    }
+
+    .calendar-day {
+        font-size: 0.8rem;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+/* 시간 선택기 스타일 */
+.time-picker {
+    position: relative;
+    width: 100%;
+}
+
+.time-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background: white;
+    font-size: 14px;
+}
+
+.time-input:hover {
+    border-color: #3498db;
+}
+
+.time-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    z-index: 1000;
+    display: flex;
+}
+
+.time-column {
+    flex: 1;
+    border-right: 1px solid #eee;
+    max-height: 200px;
+}
+
+.time-column:last-child {
+    border-right: none;
+}
+
+.column-header {
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.hour-list,
+.minute-list,
+.period-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.time-option {
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.time-option:hover {
+    background-color: #f5f5f5;
+}
+
+.time-option.selected {
+    background-color: #e3f2fd;
+    color: #2196f3;
+    font-weight: bold;
+}
+
+/* 스크롤바 스타일 */
+.hour-list::-webkit-scrollbar,
+.minute-list::-webkit-scrollbar,
+.period-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.hour-list::-webkit-scrollbar-track,
+.minute-list::-webkit-scrollbar-track,
+.period-list::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.hour-list::-webkit-scrollbar-thumb,
+.minute-list::-webkit-scrollbar-thumb,
+.period-list::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 2px;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .time-dropdown {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+        border-radius: 15px 15px 0 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+    }
+
+    .time-dropdown::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    .time-column {
+        padding: 10px 0;
+    }
+
+    .time-option {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.url-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.url-input::placeholder {
+    color: #bbb;
+}
+
+/* 링크 아이콘 추가 */
+.schedule-item h4 a::after {
+    content: '🔗';
+    font-size: 0.8em;
+    margin-left: 5px;
+    opacity: 0.7;
+}
+
+.schedule-item .title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding-right: 42px;  /* 지도 버튼 너비 + 여백 */
+    text-align: left !important;
+}
+
+.schedule-item h4 {
+    flex: 1;
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left !important;
+}
+
+.view-map-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: #f8f9fa;
+    color: #3498db;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.view-map-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.view-map-btn::before {
+    content: '📍';
+    font-size: 1.2em;
+}
+
+/* 모바일에서의 지도 버튼 스타일 */
+@media (max-width: 768px) {
+    .view-map-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .view-map-btn::before {
+        font-size: 1em;
+    }
+}
+
+.map-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.map-input-container .url-input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 50px; /* 돋보기 버튼 공간 확보 */
+}
+
+.map-search-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    padding: 0;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.map-search-btn:hover {
+    background: #2980b9;
+}
+
+.map-search-btn::before {
+    content: '🔍';
+    font-size: 1.2em;
+}
+
+/* URL 입력 필드 스타일 수정 */
+.url-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 20px; /* 입력창 높이 일관성 */
+}
+
+/* 지도 검색 입력창 특별 스타일 */
+.map-input-container .url-input {
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+}
+
+.map-input-container .url-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: -2px 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .map-input-container .url-input {
+        padding-right: 45px;
+    }
+    
+    .map-search-btn {
+        width: 40px;
+    }
+}
+
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.title-container input[type="text"] {
+    flex: 1;
+}
+
+.travel-type {
+    margin-top: 8px;
+    display: flex;
+    gap: 15px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* 기존 캘린더 스타일은 유지하고 새로운 아이콘 스타일만 추가 */
+.calendar-day.has-event.is-departure::after {
+    content: '✈️';
+}
+
+.calendar-day.has-event.is-arrival::after {
+    content: '🛬';
+}
+
+@media (max-width: 768px) {
+    .title-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .travel-type {
+        justify-content: flex-end;
+    }
+}
+
+/* 데이터 동기화 컨트롤 스타일 제거 */
+.data-sync-controls,
+.sync-btn,
+.export-btn,
+.import-btn,
+.export-btn::before,
+.import-btn::before {
+    display: none;
+}
+
+.schedule-content {
+    text-align: left !important;
+    height: auto;
+    overflow: visible;
+}
+
+.schedule-content .title-container {
+    display: flex;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    height: auto;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.schedule-content h4, 
+.schedule-content h4 a {
+    text-align: left !important;
+    display: block;
+    word-wrap: break-word;
+    height: auto;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.schedule-content h4 a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s;
+    text-decoration: underline;
+    text-decoration-color: #3498db;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+}
+
+.schedule-content h4 a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.event-time {
+    text-align: left !important;
+    color: #27ae60;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.event-time::before {
+    content: '🕒';
+    margin-right: 6px;
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+.event-details {
+    text-align: left !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    height: auto;
+    overflow: visible;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.schedule-timeline {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #3498db, #2ecc71);
+    border-radius: 3px;
+}
+
+.view-map-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: #f8f9fa;
+    color: #3498db;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.view-map-btn:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.schedule-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+}
+
+.schedule-item.show-actions .schedule-actions {
+    opacity: 1;
+    visibility: visible;
+}
+
+.schedule-actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.schedule-actions .edit-btn {
+    background: #f8f9fa;
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.schedule-actions .edit-btn:hover {
+    background: #3498db;
+    color: white;
+}
+
+.schedule-actions .delete-btn {
+    background: #f8f9fa;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.schedule-actions .delete-btn:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .schedule-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .event-details {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .schedule-actions button {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+.time-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.time-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.submit-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background: #27ae60;
+}
+
+.json-import-section {
+    display: none; /* 완전히 숨기기 */
+}
+
+/* 관리자 모드 등에서 필요할 때 보이게 하기 위한 클래스 */
+.json-import-section.show {
+    display: block;
+}
+
+.divider {
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #ddd;
+}
+
+.divider span {
+    position: relative;
+    background: white;
+    padding: 0 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.json-upload-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.json-file-input {
+    display: none;
+}
+
+.json-file-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.json-file-label:hover {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.json-icon {
+    font-size: 1.2em;
+}
+
+.import-json-btn {
+    padding: 10px 20px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.import-json-btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.import-json-btn:not(:disabled):hover {
+    background: #2980b9;
+}
+
+@media (max-width: 768px) {
+    .json-upload-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .json-file-label, .import-json-btn {
+        width: 100%;
+        justify-content: center;
+    }
+} 

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여행 일정 관리</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="hawaii-logo.png" alt="여행 아이콘" class="logo-image">
+            <h1>ALOHA, GO TO HAWAII</h1>
+        </header>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button id="prevMonth">◀</button>
+                <h2 id="currentMonth">2024년 3월</h2>
+                <button id="nextMonth">▶</button>
+            </div>
+            <div class="weekdays">
+                <div>일</div>
+                <div>월</div>
+                <div>화</div>
+                <div>수</div>
+                <div>목</div>
+                <div>금</div>
+                <div>토</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <div class="schedule-list">
+            <div class="schedule-header">
+                <h3>일정 목록</h3>
+                <button class="add-schedule-btn" id="addScheduleBtn" title="새 일정 추가"></button>
+            </div>
+            <div class="schedule-date">
+                <span id="selectedDate">선택된 날짜</span>
+            </div>
+            <div class="schedule-items" id="scheduleItems">
+                <div class="schedule-timeline"></div>
+                <!-- 일정 항목들이 여기에 동적으로 추가됨 -->
+            </div>
+
+            <!-- 일정 추가/수정 폼 -->
+            <div class="schedule-form-container hidden" id="scheduleForm">
+                <div class="form-content">
+                    <h3>새 일정 추가</h3>
+                    <form class="schedule-form">
+                        <input type="hidden" id="eventId">
+                        
+                        <div class="form-group">
+                            <label for="eventTitle">일정 제목</label>
+                            <input type="text" id="eventTitle" required>
+                            <div class="travel-type">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="isDeparture"> 출발일
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="isArrival"> 도착일
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDate">날짜</label>
+                            <input type="date" id="eventDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventTime">시간</label>
+                            <select id="eventTime" class="time-select">
+                                <option value="">시간 선택</option>
+                                <option value="오전 12:00">오전 12:00</option>
+                                <option value="오전 12:30">오전 12:30</option>
+                                <option value="오전 01:00">오전 01:00</option>
+                                <option value="오전 01:30">오전 01:30</option>
+                                <option value="오전 02:00">오전 02:00</option>
+                                <option value="오전 02:30">오전 02:30</option>
+                                <option value="오전 03:00">오전 03:00</option>
+                                <option value="오전 03:30">오전 03:30</option>
+                                <option value="오전 04:00">오전 04:00</option>
+                                <option value="오전 04:30">오전 04:30</option>
+                                <option value="오전 05:00">오전 05:00</option>
+                                <option value="오전 05:30">오전 05:30</option>
+                                <option value="오전 06:00">오전 06:00</option>
+                                <option value="오전 06:30">오전 06:30</option>
+                                <option value="오전 07:00">오전 07:00</option>
+                                <option value="오전 07:30">오전 07:30</option>
+                                <option value="오전 08:00">오전 08:00</option>
+                                <option value="오전 08:30">오전 08:30</option>
+                                <option value="오전 09:00">오전 09:00</option>
+                                <option value="오전 09:30">오전 09:30</option>
+                                <option value="오전 10:00">오전 10:00</option>
+                                <option value="오전 10:30">오전 10:30</option>
+                                <option value="오전 11:00">오전 11:00</option>
+                                <option value="오전 11:30">오전 11:30</option>
+                                <option value="오후 12:00">오후 12:00</option>
+                                <option value="오후 12:30">오후 12:30</option>
+                                <option value="오후 01:00">오후 01:00</option>
+                                <option value="오후 01:30">오후 01:30</option>
+                                <option value="오후 02:00">오후 02:00</option>
+                                <option value="오후 02:30">오후 02:30</option>
+                                <option value="오후 03:00">오후 03:00</option>
+                                <option value="오후 03:30">오후 03:30</option>
+                                <option value="오후 04:00">오후 04:00</option>
+                                <option value="오후 04:30">오후 04:30</option>
+                                <option value="오후 05:00">오후 05:00</option>
+                                <option value="오후 05:30">오후 05:30</option>
+                                <option value="오후 06:00">오후 06:00</option>
+                                <option value="오후 06:30">오후 06:30</option>
+                                <option value="오후 07:00">오후 07:00</option>
+                                <option value="오후 07:30">오후 07:30</option>
+                                <option value="오후 08:00">오후 08:00</option>
+                                <option value="오후 08:30">오후 08:30</option>
+                                <option value="오후 09:00">오후 09:00</option>
+                                <option value="오후 09:30">오후 09:30</option>
+                                <option value="오후 10:00">오후 10:00</option>
+                                <option value="오후 10:30">오후 10:30</option>
+                                <option value="오후 11:00">오후 11:00</option>
+                                <option value="오후 11:30">오후 11:30</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventUrl">관련 링크 (선택사항)</label>
+                            <input type="url" id="eventUrl" placeholder="https://" class="url-input">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mapUrl">지도 링크 (선택사항)</label>
+                            <div class="map-input-container">
+                                <input type="url" id="mapUrl" placeholder="지도 URL을 입력하세요" class="url-input">
+                                <button type="button" class="map-search-btn" id="mapSearchBtn"></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDescription">상세 내용</label>
+                            <textarea id="eventDescription" placeholder="상세 내용을 입력하세요"></textarea>
+                        </div>
+
+                        <div class="form-buttons">
+                            <button type="submit" class="submit-btn">일정 추가</button>
+                            <button type="button" class="cancel-btn" id="cancelBtn">취소</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 일정 목록 하단에 JSON 업로드 섹션 추가 -->
+            <div class="json-import-section">
+                <div class="divider">
+                    <span>일정 일괄 업데이트</span>
+                </div>
+                <div class="json-upload-container">
+                    <input type="file" id="jsonFileInput" accept=".json" class="json-file-input">
+                    <label for="jsonFileInput" class="json-file-label">
+                        <span class="json-icon">📄</span>
+                        JSON 파일 선택
+                    </label>
+                    <button id="importJsonBtn" class="import-json-btn" disabled>일정 업데이트</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
