@@ -1069,33 +1069,6 @@ header h1 {
     .travel-type {
         justify-content: flex-end;
     }
-    
-    /* 모바일에서 일정 아이템 액션 버튼 스타일 수정 */
-    .schedule-actions {
-        display: flex;
-        opacity: 1;
-        visibility: visible;
-        height: auto;
-        padding-top: 12px;
-    }
-    
-    .schedule-item {
-        position: relative;
-    }
-    
-    .schedule-actions .edit-btn,
-    .schedule-actions .delete-btn {
-        display: inline-block;
-        width: 100%;
-        text-align: center;
-    }
-    
-    /* 모바일에서 수정/삭제 버튼 크기 조정 */
-    .schedule-actions button {
-        padding: 10px 16px;
-        font-size: 1rem;
-        min-width: 100px;
-    }
 }
 
 /* 데이터 동기화 컨트롤 스타일 제거 */
