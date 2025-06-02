@@ -396,6 +396,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // 현재 아이템의 액션 메뉴 토글
                 this.classList.toggle('show-actions');
+                console.log('일정 클릭 - 액션 메뉴 토글:', isActionVisible);
+            });
+            
+            // 모바일 터치 이벤트 추가
+            eventElement.addEventListener('touchstart', function(e) {
+                // 이미 버튼이나 링크를 터치한 경우 무시
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                    return;
+                }
+                
+                console.log('일정 터치 시작');
+            });
+            
+            eventElement.addEventListener('touchend', function(e) {
+                // 이미 버튼이나 링크를 터치한 경우 무시
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                    return;
+                }
+                
+                // 기본 동작 방지
+                e.preventDefault();
+                
+                // 현재 아이템의 상태 토글
+                isActionVisible = !isActionVisible;
+                
+                // 다른 모든 일정의 액션 메뉴 닫기
+                const allItems = document.querySelectorAll('.schedule-item');
+                allItems.forEach(item => {
+                    if (item !== this) {
+                        item.classList.remove('show-actions');
+                    }
+                });
+                
+                // 현재 아이템의 액션 메뉴 토글
+                this.classList.toggle('show-actions');
+                console.log('일정 터치 종료 - 액션 메뉴 토글:', isActionVisible);
             });
 
             // 수정 버튼 이벤트
